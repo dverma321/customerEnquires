@@ -1,50 +1,73 @@
-/* Login.css */
 
 .input-container {
-    margin-bottom: 20px;
-  }
-  
-  .form-label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .form-control {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    transition: border-color 0.3s ease;
-  }
-  
-  .form-control:focus {
-    border-color: #007bff;
-  }
-  
-  .form-submit {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .form-submit:hover {
-    background-color: #0056b3;
-  }
+  position: relative;
+}
 
-  .form-label {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: lightcoral;
-  }
-  
+.input-container i {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+}
 
-  .navlink_login{
-    color: lightcoral;
-    text-decoration: none;
-    text-transform: uppercase;
-    padding: 1%;
+.form-control {
+  padding-left: 40px;
+}
+
+.navlink_login {
+  display: block;
+  margin-top: 1rem;
+  color: lightseagreen;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.navlink_login:hover {
+  color: lightcoral;
+
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px; /* Adjust height as needed */
+  overflow: hidden;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow for depth */
+  border: 2px solid #007bff; /* Border color */
+  margin-bottom: 20px; /* Space below the video box */
+}
+
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video covers the entire container */
+  border-radius: 15px; /* Ensures video respects container's rounded corners */
+}
+
+
+.login_bg{
+  
+  background: url("../images/png/black_girl.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  
+}
+
+
+
+@media (max-width: 992px) {
+  .row {
+    justify-content: center;
   }
+}

@@ -1,407 +1,87 @@
-/* Add this to your CSS file or style section */
+/* Home.css */
 
-.position-relative {
-  position: relative;
+.container-fluid.video_bg {
+  min-height: 100vh; 
+  background-color: #f8f9fa;
+  padding: 20px;
 }
 
-.overlay-text {
-  position: absolute;
-  top: 1%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
+.container {
+  flex: 1; /* This allows the container to grow and push the footer down */
 }
 
-.overlay-text h1 {
-  font-size: 3rem;
-  /* Adjust font size for smaller screens */
-  white-space: nowrap;
-  /* Prevent line breaks */
+.homecontainer {
+  margin-top: 20px;
 }
 
-.overlay-text p {
+.welcome_name {
   font-size: 24px;
-  /* Adjust font size for smaller screens */
-  white-space: nowrap;
-  /* Prevent line breaks */
+  font-weight: bold;
+  color: #343a40;
+  text-transform: uppercase;
+}
+
+.home_user {
+  font-size: 18px;
+  color: #495057;
+}
+
+.scrollable-container {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.message-item {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.message-item p {
+  margin: 0;
+  font-size: 16px;
+  color: #212529;
+}
+
+.message-item hr {
+  margin: 10px 0;
+  border: 0;
+  border-top: 1px solid #e9ecef;
+}
+
+.admin-responses {
+  margin-top: 10px;
+  padding: 10px;
+  border-top: 1px solid #e9ecef;
+}
+
+.admin-responses h6 {
+  font-size: 16px;
+  font-weight: bold;
+  color: lightcoral;
+}
+
+.admin-responses p {
+  margin: 5px 0;
 }
 
 .footer {
-  background: linear-gradient(to bottom right, red, white);
-  /* Adjust the gradient direction as needed */
-  color: white;
-  padding: 10px 0;
-  
-  /* Add padding to the footer content */
-  text-align: center;
-  height: auto;
-   
-}
-
-.meeting {
-  height: 100%;
+  background-color: #343a40;
+  color: #ffffff;
+  padding: 20px 0;  
+  bottom: 0;
   width: 100%;
-  margin-top: 1%;
-
+  text-align: left;
 }
 
-.candlelight{
-  height: 100%;
-  width: 100%;
-}
-
-
-.imagedata {
-  height: 100%;
-  width: 100%;
-  padding: 1%;
-  border-style: solid;
-
-  /* Gradient border color */
-  border-image: linear-gradient(to right, black, red);
-  border-image-slice: 1;
-  /* Ensure the entire border is covered by the gradient */
-}
-
-h1.home_user {
-
-  padding-top: 2%;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-
-
-}
-
-.welcome-text {
-  
-  /* gradient effect on text  */
-
-  background-image: linear-gradient(to right, #000, lightcoral);
-  -webkit-background-clip: text;
-  /* Apply gradient to text */
-  -webkit-text-fill-color: transparent;
-
-  font-weight: bold; /* Bold font weight */
-  text-transform: uppercase;
-}
-
-.user-name {
-  color: #000; /* Text color for user name */
-  font-weight: normal; /* Normal font weight */
-}
-
-h1.initial_home_user {
-  padding-top: 2%;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-size: 24px;
-
-  /* gradient effect on text  */
-  background-image: linear-gradient(to right, #000, lightcoral);
-  -webkit-background-clip: text;
-  /* Apply gradient to text */
-  -webkit-text-fill-color: transparent;
-
-}
-
-h3.home_work {
-
-  font-family: 'Arial', sans-serif;
-  /* Set font family */
-  /* color: red; Set text color */
-  font-weight: bold;
-  /* Set font weight to bold */
-  padding-top: 1%;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  display: inline;
-
-  /* for gradient effect in text  */
-
-  background-image: linear-gradient(to right, lightcoral, #000);
-  -webkit-background-clip: text;
-  /* Apply gradient to text */
-  -webkit-text-fill-color: transparent;
-
-}
-
-p.description {
+.footer p {
+  margin: 0;
   font-size: 14px;
-  color: gray;
-  padding: 1%;
-}
-
-/* Responsive Styles */
-
-@media (max-width: 768px) {
-
-  .imagedata img {
-
-    margin-top: -10%;
-
-  }
-
-  h1.home_user {
-
-    margin-top: 1%;
-    font-size: 22px;
-  }
-
+  padding-left: 20px; 
   
-.user-name {
-  color: #000; /* Text color for user name */
-  font-weight: normal; /* Normal font weight */
-}
-
-
-
-  h1.initial_home_user {
-    padding-top: 2%;
-    text-transform: uppercase;
-    font-size: 16px;
-  }
-
-
-  h3.home_work {
-    margin-top: 1%;
-    font-size: 16px;
-  }
-
-  .overlay-text {
-    font-size: 18px;
-    /* Adjust font size for smaller screens */
-    margin-top: 10%;
-    /* Increase top margin */
-  }
-
-  .overlay-text h1 {
-    font-size: 14px;
-    /* Adjust font size for smaller screens */
-
-  }
-
-  .overlay-text p {
-    font-size: 18px;
-    /* Adjust font size for smaller screens */
-
-  }
-
-  .candlelight{
-    height: 70%;
-    width: 70%;
-  }
-
-  .footer {
-    margin-top: 10%;
-  }
-}
-
-/* For Mobile Screen Display  */
-
-@media (max-width: 576px) {
-
-  h1.home_user {
-
-    margin-top: 1%;
-    font-size: 20px;
-  }
-
-  
-  h1.initial_home_user {
-
-    text-transform: uppercase;
-    font-size: 10px !important;
-    margin-top: 1%;
-    letter-spacing: 0;
-
-  }
-
-  
-.user-name {
-  color: #000; /* Text color for user name */
-  font-weight: normal; /* Normal font weight */
-}
-
-  
-.imagedata {
-  height: 35%;
-  width: 35%;
-  
-  border-style: solid;
-
-  /* Gradient border color */
-  border-image: linear-gradient(to right, black, red);
-  border-image-slice: 1;
-  
-  margin-top: 1%;
-  /* Ensure the entire border is covered by the gradient */
-}
-
-
-  .candlelight{
-    height: 50%;
-    width: 50%;
-    margin-top: 1%;
-  }
-
-  
-  .meeting {
-    margin-top: 1%;
-  }
-
-
-  h3.home_work {
-    margin-top: 1%;
-    font-size: 16px;
-  }
-
-  .overlay-text {
-    font-size: 14px;
-    /* Further reduce font size for smaller screens */
-   
-    /* Increase top margin even more */
-  }
-
-  .overlay-text h1 {
-    font-size: 18px;
-    /* Adjust font size for smaller screens */
-
-  }
-
-  .overlay-text p {
-    font-size: 18px;
-    /* Adjust font size for smaller screens */
-
-  }
-
-  p.description {
-    font-size: 8px;
-    padding: 1%;
-  }
-
-
-  .footer {
-    margin-top: 55%;
-    font-size: 14px;
-  }
-}
-
-/* Between Tablet and Desktop Screen Display  */
-
-@media (min-width: 768px) and (max-width: 1024px) {
-  h1.initial_home_user {
-    font-size: 18px;
-    /* Adjust font size for medium-sized screens */
-    white-space: normal;
-    /* Allow text to wrap */
-    max-width: 100%;
-    /* Limit the width of the text container */
-    margin-top: 1%;
-  }
-
-  .meeting {
-
-    width: 250px;
-    height: 250px;
-    margin-top: 10%;
-    border-radius: 2px solid #000;
-
-  }
-
-  .candlelight{
-    height: 50%;
-    width: 50%;
-    margin-top: 10%;
-
-  }
-
-  
-.imagedata {
-  height: 40%;
-  width: 40%;
-  margin-top: 10%;
-
-  
-  border-style: solid;
-
-  /* Gradient border color */
-  border-image: linear-gradient(to right, black, red);
-  border-image-slice: 1;
-  /* Ensure the entire border is covered by the gradient */
-}
-
-
-
-  .footer {
-    margin-top: 50%;
-
-  }
-
-}
-
-/* Larger Screen Display above 1024 px  */
-
-@media (min-width: 1025px) {
-
-  h1.initial_home_user {
-    font-size: 18px;
-    /* Adjust font size for medium-sized screens */
-    white-space: normal;
-    /* Allow text to wrap */
-    max-width: 100%;
-    /* Limit the width of the text container */
-    margin-top: 1%;
-  }
-
-  .meeting {
-
-    width: 70%;
-    height: 70%;
-
-  }
-
-  .candlelight{
-    height: 50%;
-    width: 50%;
-    margin-top: 30%;
-  }
-
-    
-.imagedata {
-  height: 40%;
-  width: 40%;
-  margin-top: 30%;  
-  border-style: solid;
-  /* Gradient border color */
-  border-image: linear-gradient(to right, black, red);
-  border-image-slice: 1;
-  /* Ensure the entire border is covered by the gradient */
-}
-
-
-h1.home_user {
-
-  padding-top: 10%;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-
- 
-
-}
-
-
-h3.home_work {
-  
-  padding-top: 5%;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  display: inline;
-  
-}
-
-  .footer {
-    margin-top: 1%;
-  }
-
 }

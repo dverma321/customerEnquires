@@ -1,9 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+
+body{
+  
+  /* background: url("/home.jpg"); */
+  /* background-color: lightpink; */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  
+}
+
+
 html{
   font-size: 100%;
 }
+
+
+.container-fluid  {
+  backdrop-filter: blur(4px); /* Apply a blur effect */
+  background-color: rgba(255, 255, 255, 0.5); /* Background color with transparency */
+
+}
+
+
+.card  {
+  backdrop-filter: blur(4px); /* Apply a blur effect */
+  background-color: rgba(255, 255, 255, 0.5); /* Background color with transparency */
+  
+
+}
+

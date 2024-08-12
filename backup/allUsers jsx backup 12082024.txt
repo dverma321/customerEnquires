@@ -1,0 +1,153 @@
+import React, { useEffect, useState } from 'react';
+import './AllUsers.css';
+
+export const AllUsers = () => {
+  const [adminMessages, setAdminMessages] = useState([]);
+
+  // Fetch all messages for the admin
+  const getAdminMessages = async () => {
+    try {
+      const token = localStorage.getItem('jwtoken');
+      const VITE_LOCAL_API_URL = import.meta.env.VITE_LOCAL_API_URL;
+      const VITE_PROD_API_URL = import.meta.env.VITE_PROD_API_URL;
+      const apiUrl = import.meta.env.DEV ? VITE_LOCAL_API_URL : VITE_PROD_API_URL;
+
+      const res = await fetch(`${apiUrl}/admincontrol/admin_messages`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setAdminMessages(data);
+      } else {
+        console.error('Failed to fetch admin messages:', await res.json());
+      }
+    } catch (error) {
+      console.error('Error fetching admin messages:', error);
+    }
+  };
+
+  // Fetch admin messages on component mount
+  useEffect(() => {
+    getAdminMessages();
+  }, []);
+
+  // Send response to a particular user
+  const handleSendMessage = async (messageId) => {
+    const responseMessage = prompt("Enter your response:"); // Prompt to get the message from admin
+
+    if (responseMessage) {
+      try {
+        const token = localStorage.getItem('jwtoken');
+        const VITE_LOCAL_API_URL = import.meta.env.VITE_LOCAL_API_URL;
+        const VITE_PROD_API_URL = import.meta.env.VITE_PROD_API_URL;
+        const apiUrl = import.meta.env.DEV ? VITE_LOCAL_API_URL : VITE_PROD_API_URL;
+
+        const res = await fetch(`${apiUrl}/admincontrol/send_response/${messageId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ responseMessage }),
+        });
+
+        if (res.ok) {
+          alert('Message sent successfully');
+          getAdminMessages(); // Refetch messages after sending a response
+        } else {
+          console.error('Failed to send message:', await res.json());
+          alert('Failed to send message');
+        }
+      } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Error sending message');
+      }
+    }
+  };
+
+  const handleRemoveMessage = async (messageId) => {
+    try {
+      const token = localStorage.getItem('jwtoken');
+      const VITE_LOCAL_API_URL = import.meta.env.VITE_LOCAL_API_URL;
+      const VITE_PROD_API_URL = import.meta.env.VITE_PROD_API_URL;
+      const apiUrl = import.meta.env.DEV ? VITE_LOCAL_API_URL : VITE_PROD_API_URL;
+
+      const res = await fetch(`${apiUrl}/admincontrol/remove_message/${messageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        alert('Message removed successfully');
+        getAdminMessages(); // Refetch messages after removal
+      } else {
+        console.error('Failed to remove message:', await res.json());
+        alert('Failed to remove message');
+      }
+    } catch (error) {
+      console.error('Error removing message:', error);
+      alert('Error removing message');
+    }
+  };
+
+  return (
+    <div className="container mt-4">
+      <h2>All Enquires from the customers:</h2>
+      {adminMessages.length > 0 ? (
+        <div className="messages-list">
+          {adminMessages.slice().reverse().map((msg) => (
+            <div key={msg._id} className="message-item p-3 mb-3 border rounded">
+              <p><strong>Name:</strong> {msg.name}</p>
+              <p><strong>Email:</strong> {msg.email}</p>
+              <p><strong>Order ID:</strong> {msg.orderId}</p>
+              <p><strong>Platform:</strong> {msg.platform}</p>
+              <p><strong>Date:</strong> {new Date(msg.createdAt).toLocaleString()}</p>
+              <p><strong>Message:</strong> {msg.content}</p>
+              
+              {msg.responses && msg.responses.length > 0 && (
+                <div className="admin-responses mt-3">
+                  <h5>Admin Responses:</h5>
+                  <ul>
+                    {msg.responses.slice().reverse().map((response) => (
+                      <li key={response._id}>
+                        <p><strong>Response:</strong> {response.message}</p>
+                        <p><strong>Sent At:</strong> {new Date(response.sentAt).toLocaleString()}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <button 
+                className="btn btn-primary me-2"
+                onClick={() => handleSendMessage(msg._id)} // Pass msg._id here
+              >
+                Send Message
+              </button>
+              <button 
+                className="btn btn-danger"
+                onClick={() => handleRemoveMessage(msg._id)}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No messages found.</p>
+      )}
+    </div>
+  );
+};
+
+export default AllUsers;

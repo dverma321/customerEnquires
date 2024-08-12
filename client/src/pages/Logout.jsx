@@ -11,12 +11,15 @@ const Logout = () => {
   useEffect(() => {
     const logoutUser = async () => {
       try {
-        // Make a request to the logout endpoint on your server
-        const URI = 'http://localhost:3000'; 
+
+    
+    const VITE_LOCAL_API_URL = import.meta.env.VITE_LOCAL_API_URL;
+    const VITE_PROD_API_URL = import.meta.env.VITE_PROD_API_URL;
+
+    const apiUrl = import.meta.env.DEV ? VITE_LOCAL_API_URL : VITE_PROD_API_URL;
+
         
-        // const URI = 'https://shaddi.onrender.com'; 
-        
-        const response = await fetch(`${URI}/user/logout`, {
+        const response = await fetch(`${apiUrl}/user/logout`, {
           method: 'GET',
           credentials: 'include', // Include credentials (cookies) in the request
         });

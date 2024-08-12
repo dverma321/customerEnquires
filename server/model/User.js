@@ -6,50 +6,9 @@ const Schema = mongoose.Schema({
     name: String,
     email: String,
     password: String,
-    confirmPassword: String,
-    gender: String,
-    phone: Number,
-    isAdmin: Boolean,
-    verified: Boolean,
-
-    // user update profile schema
-
-    country: String,
-    state: String,
-    city: String,
-    pincode: String,
-    alternateMobileNumber: Number,
-
-    // personal Data 
-
-    dob: String,
-    height: Number,
-    weight: Number,
-    community: String,
-    caste: String,
-    bodyColor: String,
-    drink: String,
-    smoke: String,
-    food: String,
-    hobbies: [String],
-
-
-    // work Data
-
-    work: String,
-    professionalStatus: String,
-    salary: Number,
-
-    // image upload , if error like jwt token is undefined then comment image
-
-    // image: {
-    //     type: String,
-    // },
-
-
+    confirmPassword: String,    
+    isAdmin: Boolean, 
     imageUrl: String,
-
-    // imageData: String,
 
     createdAt: { type: Date, default: Date.now }, // Adding createdAt field with default value as current date/time
 
@@ -61,7 +20,22 @@ const Schema = mongoose.Schema({
             }
         }
 
-    ]
+    ],
+
+      // Adding messages field to store user messages
+      messages: [
+        {
+            message: {
+                type: String,
+                required: true
+            },
+            createdAt: {
+                type: Date,
+                default: Date.now
+            }
+        }
+    ],
+
 
 })
 
@@ -90,6 +64,7 @@ Schema.methods.generateAuthToken = async function () {
 
     }
 }
+
 
 const User = mongoose.model('UserData', Schema);
 module.exports = User

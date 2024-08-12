@@ -1,0 +1,14 @@
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height to center the image vertically */
+    width: 100%; /* Full width */
+  }
+  
+  .loading-image {
+    max-width: 100%;
+    width: auto; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
