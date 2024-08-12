@@ -6,10 +6,6 @@ const moment = require('moment'); // for Date Format
 const cors = require('cors');
 const fs = require('fs');
 const multer = require('multer');
-// const tf = require('@tensorflow/tfjs-node');
-// const cocoSsd = require('@tensorflow-models/coco-ssd');
-const sharp = require('sharp');
-
 const authenticate = require('../middleware/authentication');
 
 const router = express.Router()
