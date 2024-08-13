@@ -7,8 +7,7 @@ const Schema = mongoose.Schema({
     email: String,
     password: String,
     confirmPassword: String,    
-    isAdmin: Boolean, 
-    imageUrl: String,
+    isAdmin: Boolean,    
 
     createdAt: { type: Date, default: Date.now }, // Adding createdAt field with default value as current date/time
 
