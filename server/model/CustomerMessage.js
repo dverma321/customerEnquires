@@ -6,6 +6,7 @@ const messageSchema = new mongoose.Schema({
   email: String,
   orderId: String,
   platform: String,
+  imageUrl: String,
   content: {
     type: String,
     required: true,
