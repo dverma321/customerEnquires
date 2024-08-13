@@ -35,11 +35,13 @@ const userRouter = require('./api/User');
 
 const message_route = require('./api/ContactUs.js');
 const admincontrol_route = require('./api/Admin_fetch_allMessages.js');
+const resolved_route = require("./api/Resolved_ticket_Route.js");
 
 
 app.use('/user', userRouter);
 app.use('/customer_message', message_route);
 app.use('/admincontrol', admincontrol_route);
+app.use('/resolved', resolved_route);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
