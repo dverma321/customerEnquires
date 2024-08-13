@@ -2,36 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
 
-// Route to get all messages for the admin
-
-router.get('/admin_messages_withoutPagination', async (req, res) => {
-  try {
-    // Fetch all messages where receiverEmail matches admin's email
-    const adminEmail = 'divyanshuverma36@gmail.com';
-    const messages = await Message.find({ receiverEmail: adminEmail });
-
-    if (messages.length === 0) {
-      return res.status(404).json({ message: 'No messages found for the admin.' });
-    }
-
-    // Map and group messages by user email, including order ID, platform, and created date
-    const groupedMessages = messages.map(msg => ({
-      _id: msg._id, 
-      name: msg.name,
-      email: msg.email,
-      orderId: msg.orderId,
-      platform: msg.platform,
-      content: msg.content,
-      createdAt: msg.createdAt,
-      responses: msg.responses
-    }));
-
-    res.status(200).json(groupedMessages);
-  } catch (error) {
-    console.error('Error fetching admin messages:', error);
-    res.status(500).json({ message: 'Failed to fetch messages for the admin.' });
-  }
-});
 
 // pagination route for fetching all messages from the all users
 
@@ -67,7 +37,8 @@ router.get('/admin_messages', async (req, res) => {
       platform: msg.platform,
       content: msg.content,
       createdAt: msg.createdAt,
-      responses: msg.responses
+      responses: msg.responses,
+      imageUrl: msg.imageUrl
     }));
 
     res.status(200).json({
