@@ -1,4 +1,3 @@
-// server/routes/messageRoutes.js
 const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
@@ -44,7 +43,11 @@ router.get('/admin_messages', async (req, res) => {
     const skip = (page - 1) * limit; // Calculate how many messages to skip
 
     // Fetch paginated messages
-    const messages = await Message.find({ receiverEmail: adminEmail })
+    
+    const messages = await Message.find({ 
+      receiverEmail: adminEmail,
+      closeTicket: false // Exclude messages where closeTicket is true
+    })
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 }); // Sort messages by date descending
