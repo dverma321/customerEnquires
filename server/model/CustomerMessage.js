@@ -27,7 +27,9 @@ const messageSchema = new mongoose.Schema({
         default: Date.now,
       }
     }
-  ]
+  ],
+
+    closeTicket: { type: Boolean, default: false },
   
 });
 
