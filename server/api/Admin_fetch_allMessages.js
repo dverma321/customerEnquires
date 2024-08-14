@@ -1,3 +1,4 @@
+// server/routes/messageRoutes.js
 const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
@@ -75,23 +76,5 @@ router.post('/send_response/:id', async (req, res) => {
   }
 });
 
-// Route to remove a message
-
-router.delete('/remove_message/:messageId', async (req, res) => {
-  try {
-    const { messageId } = req.params;
-
-    const result = await Message.findByIdAndDelete(messageId);
-
-    if (!result) {
-      return res.status(404).json({ error: 'Message not found' });
-    }
-
-    res.status(200).json({ message: 'Message removed successfully' });
-  } catch (error) {
-    console.error('Error removing message:', error);
-    res.status(500).json({ error: 'Error removing message' });
-  }
-});
 
 module.exports = router;
