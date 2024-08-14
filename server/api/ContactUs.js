@@ -1,8 +1,9 @@
-// server/routes/messageRoutes.js
 const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
 
+
+// server/routes/messageRoutes.js
 
 router.get('/customer_previous_messages', async (req, res) => {
   const { senderEmail } = req.query;
