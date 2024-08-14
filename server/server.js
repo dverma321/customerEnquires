@@ -12,7 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'https://customerenquiries.netlify.app',
+    origin: 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204
@@ -22,7 +22,7 @@ const io = socketIo(server, {
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'https://customerenquiries.netlify.app',
+  origin: 'http://localhost:5173',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
@@ -36,7 +36,7 @@ const userRouter = require('./api/User');
 const message_route = require('./api/ContactUs.js');
 const admincontrol_route = require('./api/Admin_fetch_allMessages.js');
 const resolved_route = require("./api/Resolved_ticket_Route.js");
-const image_upload_route = require("./api/ImageUpload_Route.js");
+const image_upload_route = require("./api/SendMessage_Image_Route.js");
 
 
 app.use('/user', userRouter);
