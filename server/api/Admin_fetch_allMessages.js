@@ -2,12 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
-
+const authenticate = require('../middleware/authentication');
 
 // pagination route for fetching all messages from the all users
 
 router.get('/admin_messages', async (req, res) => {
   try {
+    
     const adminEmail = 'divyanshuverma36@gmail.com';
     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const limit = parseInt(req.query.limit) || 5; // Default to 10 messages per page if not provided
@@ -53,28 +54,35 @@ router.get('/admin_messages', async (req, res) => {
   }
 });
 
-
 // Send a message response from admin
 
 router.post('/send_response/:id', async (req, res) => {
   try {
+    const { message, sender } = req.body; // Ensure you're sending both 'message' and 'sender'
     const messageId = req.params.id;
-    const { responseMessage } = req.body;
 
-    const message = await Message.findById(messageId);
-        
-    if (!message) {
+    const originalMessage = await Message.findById(messageId);
+
+    if (!originalMessage) {
       return res.status(404).json({ error: 'Message not found' });
     }
 
-    message.responses.push({ message: responseMessage });
-    await message.save();
+    // Add the new reply to the responses array
+    originalMessage.responses.push({
+      message: message,
+      sender: sender, // Ensure 'sender' is included in the response object
+      sentAt: new Date(),
+    });
 
-    res.status(200).json({ message: 'Response sent successfully' });
+    await originalMessage.save();
+
+    res.json({ message: 'Reply added successfully', updatedMessage: originalMessage });
   } catch (error) {
+    console.error('Error adding reply:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 module.exports = router;
