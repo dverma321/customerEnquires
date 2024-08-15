@@ -23,6 +23,7 @@ const messageSchema = new mongoose.Schema({
   responses: [
     {
       message: String,
+      sender: { type: String, required: true }, // Add sender field
       sentAt: {
         type: Date,
         default: Date.now,
