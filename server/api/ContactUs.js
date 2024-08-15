@@ -17,12 +17,12 @@ router.get('/customer_previous_messages', async (req, res) => {
     const decodedSenderEmail = decodeURIComponent(senderEmail);
 
     // Query messages where senderEmail matches and receiverEmail is fixed
-    const messages = await Message.find({ 
+    const messages = await Message.find({
       email: decodedSenderEmail,
       receiverEmail: "divyanshuverma36@gmail.com",
       closeTicket: false // Exclude messages where closeTicket is true
     });
-    
+
     res.status(200).json(messages);
   } catch (error) {
     console.error('Error fetching messages:', error);
@@ -35,7 +35,7 @@ router.get('/customer_previous_messages', async (req, res) => {
 router.patch('/close_ticket/:id', async (req, res) => {
   try {
     const messageId = req.params.id;
-    
+
     const message = await Message.findById(messageId);
     if (!message) {
       return res.status(404).json({ error: 'Message not found' });
@@ -47,6 +47,35 @@ router.patch('/close_ticket/:id', async (req, res) => {
     res.status(200).json({ message: 'Ticket closed successfully' });
   } catch (error) {
     console.error('Error closing ticket:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// route to reply_to_message.js
+
+router.post('/reply/:id', async (req, res) => {
+  try {
+    const { message, sender } = req.body; // Include sender in the request body
+    const messageId = req.params.id;
+
+    const originalMessage = await Message.findById(messageId);
+
+    if (!originalMessage) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    // Add the new reply to the responses array
+    originalMessage.responses.push({
+      message: message,
+      sender: sender, // Add sender to the response
+      sentAt: new Date(),
+    });
+
+    await originalMessage.save();
+
+    res.json({ message: 'Reply added successfully', updatedMessage: originalMessage });
+  } catch (error) {
+    console.error('Error adding reply:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
