@@ -71,7 +71,7 @@ router.post('/reply/:id', async (req, res) => {
       sentAt: new Date(),
     });
 
-    await originalMessage.save();
+    // await originalMessage.save();
 
     res.json({ message: 'Reply added successfully', updatedMessage: originalMessage });
   } catch (error) {
