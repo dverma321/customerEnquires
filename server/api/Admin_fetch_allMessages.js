@@ -74,7 +74,7 @@ router.post('/send_response/:id', async (req, res) => {
       sentAt: new Date(),
     });
 
-    await originalMessage.save();
+    // await originalMessage.save();
 
     res.json({ message: 'Reply added successfully', updatedMessage: originalMessage });
   } catch (error) {
@@ -82,7 +82,5 @@ router.post('/send_response/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;
