@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const http = require('http');
 const socketIo = require('socket.io');
+const MessageModel = require('./model/CustomerMessage.js');
 
 require('./config/db');
 // require('./model/InsertUsers.js'); // just use for inserting users manaually
@@ -55,22 +56,60 @@ let users = {};
 io.on('connection', (socket) => {
   console.log('New client connected');
 
+  // Handle user joining
   socket.on('join', ({ userId }) => {
     users[userId] = socket.id;
-    console.log(`User ${userId} connected`);
+    console.log(`User ${userId} connected with socket ID: ${socket.id}`);
   });
 
+  // Handle sending a message
   socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
-    const receiverSocket = users[receiverId];
-    if (receiverSocket) {
-      io.to(receiverSocket).emit('receiveMessage', { senderId, message });
-    }
+    try {
+      const newMessage = new MessageModel({
+        sender: senderId,
+        receiver: receiverId,
+        content: message,
+        createdAt: new Date(),
+      });
+      await newMessage.save();
 
-    // Save the message to the database
-    const newMessage = new Message({ senderId, receiverId, message });
-    await newMessage.save();
+      // Emit the message to all connected clients, including admin
+      io.emit('receiveMessage', newMessage);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   });
 
+  socket.on('sendReply', async ({ messageId, message, sender }) => {
+    console.log(`sendReply called for messageId: ${messageId}, message: ${message}, sender: ${sender}, socket ID: ${socket.id}`);
+    
+    try {
+      const originalMessage = await MessageModel.findById(messageId);
+      if (!originalMessage) {
+        console.error('Message not found');
+        return;
+      }
+  
+      console.log('Original message found, adding reply');
+      originalMessage.responses.push({
+        message: message,
+        sender: sender,
+        sentAt: new Date(),
+      });
+  
+      await originalMessage.save();
+      console.log('Reply saved successfully');
+  
+      // Emit to the specific receiver socket if applicable
+      io.emit('receiveReply', originalMessage);
+    } catch (error) {
+      console.error('Error sending reply:', error);
+    }
+  });
+
+
+
+  // Handle user disconnect
   socket.on('disconnect', () => {
     console.log('Client disconnected');
     Object.keys(users).forEach((userId) => {
@@ -81,6 +120,7 @@ io.on('connection', (socket) => {
     });
   });
 });
+
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
