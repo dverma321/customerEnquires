@@ -15,7 +15,7 @@ initSocket(server); // Initialize socket.io
 const port = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: ''https://customerenquiries.netlify.app',
+  origin: 'https://customerenquiries.netlify.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
