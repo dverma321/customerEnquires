@@ -6,7 +6,7 @@ let io;
 const initSocket = (server) => {
   io = socketIo(server, {
     cors: {
-      origin: 'http://localhost:5173',
+      origin: ''https://customerenquiries.netlify.app',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
       optionsSuccessStatus: 204
