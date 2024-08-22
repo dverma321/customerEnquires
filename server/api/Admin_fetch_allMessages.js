@@ -4,6 +4,10 @@ const router = express.Router();
 const Message = require('../model/CustomerMessage');
 const authenticate = require('../middleware/authentication');
 
+// import getIo
+
+const { getIo } = require('../socket'); 
+
 // pagination route for fetching all messages from the all users
 
 router.get('/admin_messages', async (req, res) => {
@@ -74,7 +78,10 @@ router.post('/send_response/:id', async (req, res) => {
       sentAt: new Date(),
     });
 
-    // await originalMessage.save();
+    await originalMessage.save();
+
+    const io = getIo(); // Get the io instance
+    io.emit('receiveReply', originalMessage); // Emit the entire updated message
 
     res.json({ message: 'Reply added successfully', updatedMessage: originalMessage });
   } catch (error) {
@@ -82,5 +89,7 @@ router.post('/send_response/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
 
 module.exports = router;
