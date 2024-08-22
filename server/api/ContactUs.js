@@ -2,6 +2,29 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
 
+// import getIo
+
+const { getIo } = require('../socket'); 
+console.log("GetIO : ", getIo);
+
+// for saving image
+
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+
+// Cloudinary configuration
+
+cloudinary.config({
+  cloud_name: process.env.cloudinary_name,
+  api_key: process.env.cloudinary_apikey,
+  api_secret: process.env.cloudinary_secretkey
+});
+
+// Use memory storage for uploading files
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
+
+
 
 // server/routes/messageRoutes.js
 
@@ -51,11 +74,12 @@ router.patch('/close_ticket/:id', async (req, res) => {
   }
 });
 
-// route to reply_to_message.js
 
-router.post('/reply/:id', async (req, res) => {
+// Route to handle replies with an attachment
+
+router.post('/reply/:id', upload.single('file'), async (req, res) => {
   try {
-    const { message, sender } = req.body; // Include sender in the request body
+    const { message, sender } = req.body;
     const messageId = req.params.id;
 
     const originalMessage = await Message.findById(messageId);
@@ -64,14 +88,29 @@ router.post('/reply/:id', async (req, res) => {
       return res.status(404).json({ error: 'Message not found' });
     }
 
-    // Add the new reply to the responses array
-    originalMessage.responses.push({
-      message: message,
-      sender: sender, // Add sender to the response
-      sentAt: new Date(),
-    });
+    let attachmentUrl = null;
 
-    // await originalMessage.save();
+    if (req.file) {
+      const base64Image = req.file.buffer.toString('base64');
+      const result = await cloudinary.uploader.upload(`data:${req.file.mimetype};base64,${base64Image}`, {
+        folder: "customer_enquiry",
+        use_filename: true,
+      });
+      attachmentUrl = result.secure_url;
+    }
+
+    const newReply = {
+      message: message,
+      sender: sender,
+      sentAt: new Date(),
+      attachment: attachmentUrl, 
+    };
+
+    originalMessage.responses.push(newReply);
+    await originalMessage.save(); // Save the updated message
+
+    const io = getIo(); // Get the io instance
+    io.emit('receiveReply', originalMessage); // Emit the entire updated message
 
     res.json({ message: 'Reply added successfully', updatedMessage: originalMessage });
   } catch (error) {
