@@ -27,7 +27,8 @@ const messageSchema = new mongoose.Schema({
       sentAt: {
         type: Date,
         default: Date.now,
-      }
+      },
+      attachment: String, // Add attachment field to store the file URL
     }
   ],
 
