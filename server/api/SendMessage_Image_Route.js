@@ -4,6 +4,9 @@ const router = express.Router();
 const Message = require('../model/CustomerMessage');
 const cloudinary = require('cloudinary').v2;
 
+const { getIo } = require('../socket'); // Import getIo
+console.log("GetIO : ", getIo);
+
 
 // Cloudinary configuration
 
@@ -17,9 +20,10 @@ cloudinary.config({
 
 // Use memory storage for uploading files
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 2MB limit
+const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB limit
 
-// routes/send_message_content_route.js
+
+// new route first time sending message to admin with io emit
 
 router.post('/send-message-optionalimage', upload.single('file'), async (req, res) => {
     try {
@@ -45,6 +49,10 @@ router.post('/send-message-optionalimage', upload.single('file'), async (req, re
 
         const savedMessage = await newMessage.save();
 
+        const io = getIo(); // Get the io instance
+        console.log("Emitting newMessage event");
+        io.emit('newMessage', savedMessage);
+
         res.status(201).json({
             message: 'Message created and image uploaded to Cloudinary successfully',
             messageData: savedMessage,
@@ -54,10 +62,6 @@ router.post('/send-message-optionalimage', upload.single('file'), async (req, re
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-
-
-
 
 module.exports = router;
 
