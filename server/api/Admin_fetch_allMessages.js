@@ -10,10 +10,16 @@ const { getIo } = require('../socket');
 
 // pagination route for fetching all messages from the all users
 
-router.get('/admin_messages', async (req, res) => {
+router.get('/admin_messages', authenticate, async (req, res) => {
   try {
     
     const adminEmail = 'divyanshuverma36@gmail.com';
+    const { isAdmin } = req.rootUser;
+    
+    if (!isAdmin) {
+      return res.status(403).json({ message: 'Access denied. No data available for non-admin users.' });
+    }
+    
     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const limit = parseInt(req.query.limit) || 5; // Default to 10 messages per page if not provided
     const skip = (page - 1) * limit; // Calculate how many messages to skip
