@@ -19,8 +19,17 @@ cloudinary.config({
 
 
 // Route to fetch all resolved messages (closeTicket: true)
-router.get('/resolved_messages', async (req, res) => {
+router.get('/resolved_messages', authenticate, async (req, res) => {
   try {
+
+    
+    const { isAdmin } = req.rootUser;
+
+    if(!isAdmin)
+    {
+      return res.status(403).json({ message: 'Access denied. No data available for non-admin users.' });
+    }
+
 
 
     // Fetch messages where closeTicket is true
