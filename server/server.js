@@ -29,12 +29,14 @@ const message_route = require('./api/ContactUs.js');
 const admincontrol_route = require('./api/Admin_fetch_allMessages.js');
 const resolved_route = require("./api/Resolved_ticket_Route.js");
 const image_upload_route = require("./api/SendMessage_Image_Route.js");
+const order_validation = require("./api/Order_validation.js");
 
 app.use('/user', userRouter);
 app.use('/customer_message', message_route);
 app.use('/admincontrol', admincontrol_route);
 app.use('/resolved', resolved_route);
 app.use('/upload-image', image_upload_route);
+app.use('/order', order_validation);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
