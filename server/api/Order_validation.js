@@ -86,5 +86,32 @@ router.put('/update-order/:orderId', async (req, res) => {
   }
 });
 
+// status for the order
+
+router.get('/check-status/:status', async (req, res) => {
+  const { status } = req.params;
+  const { startDate, endDate } = req.query; // Get date range from query params
+
+  try {
+    let query = { status }; // Start with status filter
+
+    if (startDate && endDate) {
+      // Convert dates to ISO format for MongoDB queries
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setDate(end.getDate() + 1); // Include the end date in the filter
+
+      query.orderDate = { $gte: start, $lt: end };
+    }
+
+    const orders = await Order.find(query); // Query the database
+    res.json({ orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching orders' });
+  }
+});
+
+
 
 module.exports = router;
