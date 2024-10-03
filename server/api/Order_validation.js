@@ -25,9 +25,9 @@ router.get('/check-order/:orderId', async (req, res) => {
 // entry for the new order
 
 router.post('/order-entry', async (req, res) => {
-  const { orderId, customerName, orderDate, productName, price, platform, reimburse = false } = req.body;
+  const { orderId, customerName, customerCity, customerState, orderDate, productName, price, platform, reimburse = false } = req.body;
 
-  if (!orderId || !customerName || !orderDate || !productName || !price || !platform) {
+  if (!orderId || !customerName || !customerState || !orderDate || !productName || !price || !platform) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
@@ -43,6 +43,8 @@ router.post('/order-entry', async (req, res) => {
     const newOrder = new Order({
       orderId,
       customerName,
+      customerCity,
+      customerState,
       orderDate,
       productName,
       price,
