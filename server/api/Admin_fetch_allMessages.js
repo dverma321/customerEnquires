@@ -10,7 +10,7 @@ const { getIo } = require('../socket');
 
 // pagination route for fetching all messages from the all users
 
-router.get('/admin_messages', authenticate, async (req, res) => {
+router.get('/admin_messages', authenticate ,async (req, res) => {
   try {
     
     const adminEmail = 'divyanshuverma36@gmail.com';
@@ -66,7 +66,7 @@ router.get('/admin_messages', authenticate, async (req, res) => {
 
 // Send a message response from admin
 
-router.post('/send_response/:id', async (req, res) => {
+router.post('/send_response_without_gmail/:id', async (req, res) => {
   try {
     const { message, sender } = req.body; // Ensure you're sending both 'message' and 'sender'
     const messageId = req.params.id;
@@ -96,6 +96,53 @@ router.post('/send_response/:id', async (req, res) => {
   }
 });
 
+// message with sending notification to customer
 
+const { sendEmail } = require('./Mailer.js');
+
+router.post('/send_response/:id', async (req, res) => {
+  
+  try {
+
+    const { message, sender } = req.body;
+    const messageId = req.params.id;
+    
+    const originalMessage = await Message.findById(messageId);      
+
+    if (!originalMessage) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    // Add the new reply to the responses array
+    originalMessage.responses.push({
+      message: message,
+      sender: sender, // Ensure 'sender' is included in the response object
+      sentAt: new Date(),
+    });
+
+    // Save the updated message
+    await originalMessage.save();
+
+    // Get the customer's email from the original message
+    const customerEmail = originalMessage.email;
+    const customerName = originalMessage.name;
+
+    // Send email to the customer
+    const subject = `Response from Admin regarding your inquiry`;
+    const text = `Dear ${customerName},\n\nThe admin has responded to your message.\n\nResponse: ${message}`;
+    const html = `<p>Dear ${customerName},</p><p>The admin has responded to your message.</p><p><strong>Response:</strong> ${message}</p>`;
+
+    // Use the same sendEmail function to notify the customer
+    await sendEmail(process.env.Auth_mail, customerEmail, subject, text, html);
+
+    const io = getIo(); // Get the io instance
+    io.emit('receiveReply', originalMessage); // Emit the entire updated message
+
+    res.json({ message: 'Reply added and email sent successfully', updatedMessage: originalMessage });
+  } catch (error) {
+    console.error('Error adding reply or sending email:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 module.exports = router;
