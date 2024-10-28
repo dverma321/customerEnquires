@@ -5,19 +5,20 @@ const authenciate = require('../middleware/authentication.js');
 
 // Fixed URL mappings for different products
 const productUrls = {
-  'nfs_2005': 'https://www.facebook.com',
-  'nfs_mostwanted_2012': 'https://www.facebook.com',
-  'nfs_payback': 'https://www.google.com',
-  'photoshop_cs6': 'www.snowandwhite.neocities.org',
-  'photoshop_cs_2023': 'https://example.com/stellar_data_recovery',
+  'nfs_2005': 'https://mega.nz/folder/0ytSEQCT#V9lYcyeSomM-cq5VqaKE0Q',
+  'nfs_mostwanted_2012': 'https://www.mediafire.com/file/ch72gyyo1kston8/Need_for_Speed_-_Most_Wanted-2012.rar/file',
+  'nfs_payback': 'https://mega.nz/folder/BYEkkRiC#Ns59_iTJxd6BhMpMfB0FvA',
+  'photoshop_cs6': 'https://drive.google.com/drive/folders/1zbzSHbgkRZWyC4RdY032iInwZA-mbudV?usp=sharing',
+  'photoshop_cs_2023': 'https://www.mediafire.com/folder/muntdb9p6q4bl/adobe_photoshop_2024',
   'photoshop_element_2025': 'www.snowandwhite.neocities.org',
-  'ease_data_recovery': 'www.snowandwhite.neocities.org',
-  'stellar_data_recovery': 'www.snowandwhite.neocities.org',
+  'ease_data_recovery': 'https://drive.google.com/drive/folders/19wE751B1LQk0srhLTgx2NTmYPLP0JsWo?usp=drive_link',
+  'stellar_data_recovery': 'https://drive.google.com/drive/folders/1LQBhMfl0qU18wic0HOVa5KhN74lTt__z?usp=sharing',
 };
 
 // Fixed URLs for WinRAR and Game Fixer
 const winRarUrl = 'https://example.com/winrar';
-const gameFixerUrl = 'https://example.com/gamefixer';
+const gameFixerUrl = 'https://www.mediafire.com/file/co9a8naozypyfpy/AIO.zip/file';
+
 
 // requesting for download page
 
