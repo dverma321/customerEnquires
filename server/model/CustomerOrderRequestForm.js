@@ -9,6 +9,7 @@ const CustomerOrderRequestSchema = new mongoose.Schema({
   orderDate: { type: Date, required: true },
   productName: { type: String, required: true },
   isApproved: { type: Boolean, default: false },
+  status: { type: String, default: "Pending" },
   userId: { // Reference to User model
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserData', // Name of the User model
