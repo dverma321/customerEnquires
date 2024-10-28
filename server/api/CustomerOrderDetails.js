@@ -114,9 +114,9 @@ router.put('/order_request/reject/:id', authenciate, async (req, res) => {
   try {
     const { id } = req.params;
 
-    const updatedRequest = await CustomerOrderRequest.findByIdAndUpdate(
+  const updatedRequest = await CustomerOrderRequest.findByIdAndUpdate(
       id,
-      { isApproved: false },
+      { isApproved: false, status: 'Rejected' },
       { new: true } // return the updated document
     );
 
