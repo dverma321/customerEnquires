@@ -3,6 +3,7 @@ const router = express.Router();
 const CustomerOrderRequest = require('../model/CustomerOrderRequestForm.js');
 const authenciate = require('../middleware/authentication.js');
 const products = require('./productData.js');
+const { getIo } = require('../socket'); // Import getIo
 
 // Fixed URLs for WinRAR and Game Fixer
 const winRarUrl = 'https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-701.exe';
@@ -10,45 +11,61 @@ const gameFixerUrl = 'https://www.mediafire.com/file/co9a8naozypyfpy/AIO.zip/fil
 
 // requesting for download page
 
+const { v4: uuidv4 } = require('uuid');
+
+// Post route to submit an order request
 router.post('/order_request', authenciate, async (req, res) => {
-  const loginuserid = req.rootUser._id; // Extract the user ID from the authenticated user
+  const { orderType, customerName, city, state, productName, isApproved } = req.body;
+
+  if (!orderType || !customerName || !city || !state || !productName) {
+    return res.status(400).json({ message: 'Please enter all the required details.' });
+  }
+
+  const loginId = req.rootUser._id;
 
   try {
-    const { orderId, productName, customerName, city, state, orderDate, isApproved } = req.body;
+    let orderId = req.body.orderId;
+    let orderDate = req.body.orderDate;
 
-    if(orderId ==="" || productName ==="" || customerName==="" || city==="" || state ==="" || orderDate==="")
-    {
-      return res.status(402).json({ message: 'All Fields are required' });
+    // Generate a unique order ID and set the current date for new purchases
+    if (orderType === 'new') {
+      orderId = uuidv4();
+      orderDate = new Date();
     }
 
-    const existingOrderRequest = await CustomerOrderRequest.findOne({ orderId });
-
-    if (existingOrderRequest) {
-      return res.status(401).json({ message: 'Order ID already exists' });
+    // Check if the order ID already exists
+    const existingOrder = await CustomerOrderRequest.findOne({ orderId });
+    if (existingOrder) {
+      return res.status(409).json({ message: 'Request ID already exists. Please wait for approval.' });
     }
 
-    
-    const newOrderRequest = new CustomerOrderRequest({
+    // Create a new order request document
+    const newOrder = new CustomerOrderRequest({
       orderId,
-      productName,
       customerName,
       city,
       state,
+      productName,
       orderDate,
-      userId: loginuserid, // Change this to match your schema
-      isApproved: isApproved || false,
+      orderType,
+      isApproved,
+      userId: loginId,
+      status: 'Pending',
     });
 
-    // Save the document to the database
-    await newOrderRequest.save();
+    await newOrder.save();
 
-    // Send a success response
-    res.status(201).json({ message: 'Order request submitted successfully', order: newOrderRequest });
+    // Emit the new order request to all connected clients
+    const io = getIo(); // Get your Socket.IO instance
+    io.emit('orderRequestCreated', newOrder); // Emit event with the new order request
+
+    res.status(201).json({ message: 'Order request submitted successfully.', order: newOrder });
   } catch (error) {
     console.error('Error submitting order request:', error);
-    res.status(500).json({ message: 'Failed to submit order request', error });
+    res.status(500).json({ message: 'Failed to submit order request. Please try again later.' });
   }
 });
+
 
 // Fetch all order requests
 router.get('/allrequests', authenciate, async (req, res) => {
@@ -89,12 +106,17 @@ router.put('/order_request/approve/:id', authenciate, async (req, res) => {
       return res.status(404).json({ message: 'Order request not found' });
     }
 
+    // Emit event when order is approved
+    const io = getIo();
+    io.emit('orderApproved', { orderRequest: updatedRequest });
+
     res.json({ message: 'Order request approved successfully', orderRequest: updatedRequest });
   } catch (error) {
     console.error('Error approving order request:', error);
     res.status(500).json({ message: 'Failed to approve order request', error });
   }
 });
+
 
 // reject order request
 
@@ -157,6 +179,33 @@ router.get('/my_orders', authenciate, async (req, res) => {
   } catch (error) {
     console.error('Error fetching approved orders:', error);
     res.status(500).json({ message: 'Failed to fetch approved orders', error });
+  }
+});
+
+// DELETE route to remove an order request by ID
+router.delete('/order_request/delete/:id', authenciate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { isAdmin } = req.rootUser;
+
+    if (!isAdmin) {
+      return res.status(403).json({ message: 'Access denied. No data available for non-admin users.' });
+    }
+
+    // Find the order request by ID and delete it
+    const deletedRequest = await CustomerOrderRequest.findByIdAndDelete(id);
+
+    // Check if the request was found and deleted
+    if (!deletedRequest) {
+      return res.status(404).json({ message: 'Order request not found' });
+    }
+
+    // Respond with a success message
+    res.status(200).json({ message: 'Order request deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting order request:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
