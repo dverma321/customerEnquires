@@ -65,6 +65,7 @@ router.patch('/close_ticket/:id', async (req, res) => {
     }
 
     message.closeTicket = true; // Set closeTicket to true
+    message.isHibernate = false; // Set isHibernate to false
     await message.save();
 
     res.status(200).json({ message: 'Ticket closed successfully' });
@@ -107,6 +108,7 @@ router.post('/reply/:id', upload.single('file'), async (req, res) => {
     };
 
     originalMessage.responses.push(newReply);
+    originalMessage.isHibernate = false; // Set isHibernate to false
     await originalMessage.save(); // Save the updated message
 
     const io = getIo(); // Get the io instance
@@ -118,7 +120,5 @@ router.post('/reply/:id', upload.single('file'), async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
-
 
 module.exports = router;
