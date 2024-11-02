@@ -33,6 +33,7 @@ const messageSchema = new mongoose.Schema({
   ],
 
     closeTicket: { type: Boolean, default: false },
+  isHibernate: { type: Boolean, default: false },
   
 });
 
