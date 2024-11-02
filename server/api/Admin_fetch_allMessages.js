@@ -1,4 +1,3 @@
-// server/routes/messageRoutes.js
 const express = require('express');
 const router = express.Router();
 const Message = require('../model/CustomerMessage');
@@ -50,7 +49,8 @@ router.get('/admin_messages', authenticate ,async (req, res) => {
       content: msg.content,
       createdAt: msg.createdAt,
       responses: msg.responses,
-      imageUrl: msg.imageUrl
+      imageUrl: msg.imageUrl,
+      isHibernate: msg.isHibernate
     }));
 
     res.status(200).json({
@@ -144,5 +144,55 @@ router.post('/send_response/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Route to update the isHibernate field
+router.patch('/messages/:id/hibernate', authenticate, async (req, res) => {
+  try {
+    const messageId = req.params.id;
+
+    // Find the message by ID and update isHibernate to true
+    const updatedMessage = await Message.findByIdAndUpdate(
+      messageId,
+      { isHibernate: true },
+      { new: true }  // Return the updated document
+    );
+
+    if (!updatedMessage) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    res.status(200).json({ message: 'Message successfully hibernated', updatedMessage });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Toggle isHibernate status
+router.put('/admin_messages/:id/toggle_hibernate', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isAdmin } = req.rootUser;
+
+    if (!isAdmin) {
+      return res.status(403).json({ message: 'Access denied. Only admins can update messages.' });
+    }
+
+    const message = await Message.findById(id);
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found.' });
+    }
+
+    message.isHibernate = false; // Set isHibernate to false
+    await message.save();
+
+    res.status(200).json({ message: 'Message is now active.', updatedMessage: message });
+  } catch (error) {
+    console.error('Error toggling isHibernate:', error);
+    res.status(500).json({ message: 'Failed to update message.' });
+  }
+});
+
 
 module.exports = router;
