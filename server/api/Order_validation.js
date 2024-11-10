@@ -25,20 +25,27 @@ router.get('/check-order/:orderId', async (req, res) => {
 // entry for the new order
 
 router.post('/order-entry', async (req, res) => {
-  const { orderId, customerName, customerCity, customerState, orderDate, productName, price, platform, reimburse = false } = req.body;
+  let { orderId, customerName, customerCity, customerState, orderDate, productName, price, platform, reimburse = false } = req.body;
+
+  // Trim all string fields to remove leading and trailing whitespace
+  orderId = orderId.trim();
+  customerName = customerName.trim();
+  customerCity = customerCity.trim();
+  customerState = customerState.trim();
+  orderDate = orderDate.trim();
+  productName = productName.trim();
+  platform = platform.trim();
 
   if (!orderId || !customerName || !customerState || !orderDate || !productName || !price || !platform) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-    try {
-
-       // Check if orderId already exists
+  try {
+    // Check if orderId already exists
     const existingOrder = await Order.findOne({ orderId });
     if (existingOrder) {
       return res.status(401).json({ error: 'Order ID already exists' });
     }
-
 
     const newOrder = new Order({
       orderId,
@@ -48,7 +55,7 @@ router.post('/order-entry', async (req, res) => {
       orderDate,
       productName,
       price,
-      platform,      
+      platform,
       reimburse
     });
 
