@@ -121,6 +121,34 @@ router.get('/check-status/:status', async (req, res) => {
   }
 });
 
+// delete order permanently 
+
+router.delete('/:orderId', authenticate, async (req, res) => {
+  
+  const { isAdmin } = req.rootUser;
+
+    if(!isAdmin)
+    {
+      return res.status(403).json({ message: 'Access denied. No data available for non-admin users.' });
+    }
+  
+  const { orderId } = req.params;
+
+  try {
+    // Find the order by ID and delete it
+    const deletedOrder = await Order.findOneAndDelete({ orderId });
+
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
 
 
 module.exports = router;
