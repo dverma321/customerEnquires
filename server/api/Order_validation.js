@@ -149,6 +149,35 @@ router.delete('/:orderId', authenticate, async (req, res) => {
   }
 });
 
+// change the status directly from the all the order lists
+
+router.put('/change-status/:orderId', async (req, res) => {
+  const { orderId } = req.params;
+  const { status, reimburse } = req.body;
+
+  if (!status || typeof reimburse !== 'boolean') {
+      return res.status(400).json({ error: 'Status and reimbursement are required' });
+  }
+
+  try {
+      const updatedOrder = await Order.findOneAndUpdate(
+          { orderId },
+          { status, reimburse },
+          { new: true }
+      );
+
+      if (!updatedOrder) {
+          return res.status(404).json({ error: 'Order not found' });
+      }
+
+      res.status(200).json({ message: 'Order updated successfully', order: updatedOrder });
+  } catch (err) {
+      console.error('Error updating order:', err);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 
 
 
